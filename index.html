@@ -3,609 +3,486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Exodus Tracker | When the Builders Walk Away</title>
-    <meta name="description" content="Tracking departures from major AI labs — the canary in the coal mine">
+    <title>AI Exodus Tracker</title>
+    <meta name="description" content="Tracking departures from major AI labs">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-card: #12121a;
-            --accent-red: #ff3333;
-            --accent-orange: #ff6b35;
-            --accent-yellow: #ffc234;
-            --accent-blue: #3b82f6;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --border: #1e293b;
+            --black: #000000;
+            --charcoal: #18181B;
+            --graphite: #27272A;
+            --zinc: #3F3F46;
+            --stone: #71717A;
+            --silver: #A1A1AA;
+            --smoke: #E4E4E7;
+            --cloud: #F4F4F5;
+            --white: #FFFFFF;
+            --accent: #EF4444;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, monospace;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--charcoal);
             line-height: 1.6;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 80px 24px;
         }
         
         header {
-            text-align: center;
-            margin-bottom: 60px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 40px;
+            margin-bottom: 80px;
         }
         
-        .warning-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .label {
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 16px;
         }
         
         h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent-red);
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--black);
             margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            line-height: 1.2;
         }
         
         .subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 30px;
+            font-size: 17px;
+            color: var(--stone);
+            max-width: 540px;
+            line-height: 1.6;
         }
         
-        .stats-bar {
+        .stats {
             display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-            margin-top: 30px;
+            gap: 48px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--smoke);
         }
         
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--accent-orange);
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--black);
+            letter-spacing: -0.02em;
         }
         
         .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 13px;
+            color: var(--stone);
+            margin-top: 4px;
         }
         
-        .severity-legend {
+        .section {
+            margin-bottom: 64px;
+        }
+        
+        .section-header {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 40px 0;
-            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--smoke);
         }
         
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .section-year {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--stone);
         }
         
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
+        .section-count {
+            font-size: 11px;
+            color: var(--silver);
         }
         
-        .timeline {
-            position: relative;
-            padding-left: 40px;
+        .card {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--smoke);
         }
         
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--accent-red), var(--accent-orange), var(--accent-yellow));
+        .card:last-child {
+            border-bottom: none;
         }
-        
-        .year-section {
-            margin-bottom: 50px;
-        }
-        
-        .year-header {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-orange);
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .year-header::before {
-            content: '';
-            position: absolute;
-            left: -33px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 16px;
-            background: var(--accent-orange);
-            border-radius: 50%;
-            border: 3px solid var(--bg-dark);
-        }
-        
-        .departure-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .departure-card:hover {
-            border-color: var(--accent-orange);
-            transform: translateX(5px);
-        }
-        
-        .departure-card::before {
-            content: '';
-            position: absolute;
-            left: -33px;
-            top: 30px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 2px solid var(--bg-dark);
-        }
-        
-        .severity-critical::before { background: var(--accent-red); }
-        .severity-high::before { background: var(--accent-orange); }
-        .severity-medium::before { background: var(--accent-yellow); }
-        .severity-notable::before { background: var(--accent-blue); }
         
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
+            margin-bottom: 8px;
         }
         
         .person-name {
-            font-size: 1.25rem;
+            font-size: 15px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: var(--black);
         }
         
-        .person-role {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
+        .company {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--stone);
         }
         
-        .company-tag {
-            font-size: 0.75rem;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .company-openai { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .company-google { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-        .company-anthropic { background: rgba(217, 119, 87, 0.2); color: #d97757; }
-        .company-deepmind { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
-        .company-meta { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        
-        .departure-details {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
+        .role {
+            font-size: 13px;
+            color: var(--stone);
             margin-bottom: 12px;
         }
         
-        .outcome {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 51, 51, 0.1);
-            border: 1px solid rgba(255, 51, 51, 0.3);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: var(--accent-red);
+        .description {
+            font-size: 14px;
+            color: var(--zinc);
+            line-height: 1.6;
+            margin-bottom: 12px;
         }
         
-        .outcome-warning { 
-            background: rgba(255, 107, 53, 0.1); 
-            border-color: rgba(255, 107, 53, 0.3);
-            color: var(--accent-orange);
+        .tag {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent);
+            background: rgba(239, 68, 68, 0.08);
+            padding: 4px 10px;
+            border-radius: 4px;
         }
         
-        .outcome-neutral {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.3);
-            color: var(--accent-blue);
+        .tag-warning {
+            color: #F59E0B;
+            background: rgba(245, 158, 11, 0.08);
+        }
+        
+        .tag-neutral {
+            color: var(--stone);
+            background: var(--cloud);
         }
         
         .quote {
             margin-top: 16px;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border-left: 3px solid var(--accent-orange);
-            font-style: italic;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            padding-left: 16px;
+            border-left: 2px solid var(--smoke);
         }
         
-        .quote-attribution {
+        .quote-text {
+            font-size: 14px;
+            color: var(--zinc);
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+        .quote-attr {
+            font-size: 12px;
+            color: var(--silver);
             margin-top: 8px;
             font-style: normal;
-            font-size: 0.8rem;
-            color: var(--text-muted);
         }
         
-        .insights-section {
-            margin-top: 60px;
-            padding: 40px;
-            background: linear-gradient(135deg, rgba(255, 51, 51, 0.05), rgba(255, 107, 53, 0.05));
-            border: 1px solid rgba(255, 51, 51, 0.2);
-            border-radius: 16px;
+        .insights {
+            margin-top: 80px;
+            padding-top: 48px;
+            border-top: 1px solid var(--smoke);
         }
         
-        .insights-title {
-            font-size: 1.5rem;
-            color: var(--accent-red);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .insights h2 {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--stone);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 32px;
         }
         
         .insight-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
         }
         
-        .insight-card {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+        .insight {
+            padding-right: 24px;
         }
         
-        .insight-card h4 {
-            color: var(--accent-orange);
-            margin-bottom: 10px;
-            font-size: 1rem;
+        .insight h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            margin-bottom: 8px;
         }
         
-        .insight-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+        .insight p {
+            font-size: 13px;
+            color: var(--stone);
+            line-height: 1.6;
         }
         
         footer {
-            text-align: center;
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid var(--border);
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid var(--smoke);
         }
         
-        footer a {
-            color: var(--accent-orange);
+        .footer-note {
+            font-size: 13px;
+            color: var(--silver);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        .footer-links {
+            font-size: 13px;
+            color: var(--stone);
+        }
+        
+        .footer-links a {
+            color: var(--stone);
             text-decoration: none;
         }
         
-        @media (max-width: 768px) {
-            h1 { font-size: 1.8rem; }
-            .stats-bar { gap: 20px; }
-            .stat-number { font-size: 2rem; }
-            .timeline { padding-left: 30px; }
-            .departure-card { padding: 16px; }
+        .footer-links a:hover {
+            color: var(--black);
+        }
+        
+        @media (max-width: 640px) {
+            .container { padding: 48px 20px; }
+            h1 { font-size: 24px; }
+            .stats { flex-wrap: wrap; gap: 32px; }
+            .stat-value { font-size: 24px; }
+            .insight-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="warning-icon">⚠️</div>
-            <h1>AI Exodus Tracker</h1>
+            <div class="label">Signal Tracker</div>
+            <h1>When AI builders walk away</h1>
             <p class="subtitle">
-                When the people building the most powerful AI systems decide to walk away, 
-                what do they know that we don't? Tracking departures from major AI labs.
+                Tracking notable departures from major AI labs. When the people building 
+                the most powerful systems decide to leave, it's worth paying attention.
             </p>
             
-            <div class="stats-bar">
-                <div class="stat">
-                    <div class="stat-number">23</div>
-                    <div class="stat-label">Notable Departures</div>
+            <div class="stats">
+                <div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">Notable departures</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-number">8</div>
-                    <div class="stat-label">Safety Team Exits</div>
+                <div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Safety team exits</div>
                 </div>
-                <div class="stat">
-                    <div class="stat-number">5</div>
-                    <div class="stat-label">Went "Off Grid"</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Now Warning Public</div>
+                <div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Now warning public</div>
                 </div>
             </div>
         </header>
         
-        <div class="severity-legend">
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--accent-red);"></div>
-                <span>Critical — Left industry entirely / Drastic life change</span>
+        <main>
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-year">2024</span>
+                    <span class="section-count">6 departures</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Jan Leike</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">Co-Lead, Superalignment Team</div>
+                    <p class="description">
+                        Resigned in May and immediately joined Anthropic. Posted public criticism 
+                        of OpenAI's safety practices, stating that "safety culture and processes 
+                        have taken a back seat to shiny products."
+                    </p>
+                    <span class="tag">Cited safety concerns publicly</span>
+                    <div class="quote">
+                        <p class="quote-text">"Building smarter-than-human machines is an inherently dangerous endeavor."</p>
+                        <p class="quote-attr">— via X/Twitter</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Ilya Sutskever</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">Co-Founder & Chief Scientist</div>
+                    <p class="description">
+                        Departed in May after being sidelined following the board crisis. Founded 
+                        Safe Superintelligence Inc (SSI), a company explicitly focused on 
+                        safety-first development of AGI.
+                    </p>
+                    <span class="tag">Started safety-focused competitor</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Daniel Kokotajlo</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">Researcher, Governance Team</div>
+                    <p class="description">
+                        Resigned in April and forfeited equity—potentially worth millions—rather 
+                        than sign a non-disparagement agreement.
+                    </p>
+                    <span class="tag tag-warning">Forfeited equity over principles</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Leopold Aschenbrenner</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">Researcher, Superalignment Team</div>
+                    <p class="description">
+                        Reportedly terminated in April for raising internal security concerns. 
+                        Subsequently published "Situational Awareness," a detailed document 
+                        predicting rapid AGI timelines.
+                    </p>
+                    <span class="tag tag-warning">Published detailed AI warning</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Superalignment Team</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">~20 researchers</div>
+                    <p class="description">
+                        Team effectively disbanded in May following leadership departures. The team 
+                        had been promised 20% of compute resources but reportedly received far less.
+                    </p>
+                    <span class="tag">Safety team dissolved</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Mira Murati</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">Chief Technology Officer</div>
+                    <p class="description">
+                        Departed in September amid company restructuring toward for-profit status. 
+                        One of several senior executives to leave during this period.
+                    </p>
+                    <span class="tag tag-neutral">Leadership restructuring</span>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--accent-orange);"></div>
-                <span>High — Safety concerns cited / Public warnings</span>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-year">2023</span>
+                    <span class="section-count">2 departures</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Geoffrey Hinton</span>
+                        <span class="company">Google</span>
+                    </div>
+                    <div class="role">VP & Engineering Fellow, "Godfather of AI"</div>
+                    <p class="description">
+                        Resigned in May after a decade at Google to speak freely about AI risks. 
+                        Now dedicates his time to AI safety advocacy. Awarded Nobel Prize in 
+                        Physics (2024) for foundational work on neural networks.
+                    </p>
+                    <span class="tag">Full-time safety advocate</span>
+                    <div class="quote">
+                        <p class="quote-text">"I left so that I could talk about the dangers of AI without considering how this impacts Google."</p>
+                        <p class="quote-attr">— New York Times interview</p>
+                    </div>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--accent-yellow);"></div>
-                <span>Medium — Joined competitor or policy role</span>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-year">2021</span>
+                    <span class="section-count">1 event</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Dario & Daniela Amodei + Team</span>
+                        <span class="company">OpenAI</span>
+                    </div>
+                    <div class="role">VP Research, Safety Lead, and ~10 researchers</div>
+                    <p class="description">
+                        Left to found Anthropic, explicitly citing concerns about OpenAI's safety 
+                        practices and commercial direction. This represented the largest single 
+                        talent exodus in OpenAI's history at that point.
+                    </p>
+                    <span class="tag">Founded competitor on safety principles</span>
+                </div>
             </div>
-            <div class="legend-item">
-                <div class="legend-dot" style="background: var(--accent-blue);"></div>
-                <span>Notable — Senior departure, reasons unclear</span>
+            
+            <div class="section">
+                <div class="section-header">
+                    <span class="section-year">Undisclosed</span>
+                    <span class="section-count">Multiple</span>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span class="person-name">Various researchers</span>
+                        <span class="company">Multiple labs</span>
+                    </div>
+                    <div class="role">Senior technical roles</div>
+                    <p class="description">
+                        A number of researchers have quietly left the industry, deleted their social 
+                        media presence, or relocated to remote areas. Some are known to have moved 
+                        to monasteries, farms, or off-grid communities. Names withheld at request.
+                    </p>
+                    <span class="tag">Left industry entirely</span>
+                </div>
             </div>
-        </div>
+        </main>
         
-        <div class="timeline">
-            <!-- 2024 -->
-            <div class="year-section">
-                <h2 class="year-header">2024</h2>
-                
-                <div class="departure-card severity-critical">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Jan Leike</div>
-                            <div class="person-role">Co-Lead, Superalignment Team</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>May 2024</strong> — Resigned from OpenAI and immediately joined Anthropic. 
-                        Posted scathing criticism of OpenAI's safety culture.
-                    </p>
-                    <div class="outcome">🚨 Cited safety concerns publicly</div>
-                    <div class="quote">
-                        "Over the past years, safety culture and processes have taken a back seat to shiny products."
-                        <div class="quote-attribution">— Jan Leike, via X/Twitter</div>
-                    </div>
-                </div>
-                
-                <div class="departure-card severity-critical">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Ilya Sutskever</div>
-                            <div class="person-role">Co-Founder & Chief Scientist</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>May 2024</strong> — Left after being sidelined following board crisis. 
-                        Founded Safe Superintelligence Inc (SSI), explicitly focused on safety-first AGI.
-                    </p>
-                    <div class="outcome">🚨 Started safety-focused competitor</div>
-                    <div class="quote">
-                        "This is the most important technical problem of our time."
-                        <div class="quote-attribution">— Ilya Sutskever</div>
-                    </div>
-                </div>
-                
-                <div class="departure-card severity-high">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Daniel Kokotajlo</div>
-                            <div class="person-role">Researcher, Governance Team</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>April 2024</strong> — Resigned and forfeited equity (potentially millions) 
-                        rather than sign a non-disparagement agreement.
-                    </p>
-                    <div class="outcome outcome-warning">💰 Forfeited equity over principles</div>
-                </div>
-                
-                <div class="departure-card severity-high">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Leopold Aschenbrenner</div>
-                            <div class="person-role">Researcher, Superalignment Team</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>April 2024</strong> — Reportedly fired for raising security concerns internally.
-                        Published "Situational Awareness" manifesto predicting rapid AGI timeline.
-                    </p>
-                    <div class="outcome outcome-warning">📄 Published detailed AI warning</div>
-                </div>
-                
-                <div class="departure-card severity-medium">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Entire Superalignment Team</div>
-                            <div class="person-role">~20 researchers</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>May 2024</strong> — Team effectively disbanded after Leike and Sutskever departures.
-                        Team had been promised 20% of compute, reportedly received far less.
-                    </p>
-                    <div class="outcome outcome-warning">⚠️ Safety team dissolved</div>
-                </div>
-            </div>
-            
-            <!-- 2023 -->
-            <div class="year-section">
-                <h2 class="year-header">2023</h2>
-                
-                <div class="departure-card severity-critical">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Geoffrey Hinton</div>
-                            <div class="person-role">"Godfather of AI" / VP & Engineering Fellow</div>
-                        </div>
-                        <span class="company-tag company-google">Google</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>May 2023</strong> — Resigned after decade at Google to speak freely about AI dangers.
-                        Nobel laureate (2024) now dedicates time to AI safety advocacy.
-                    </p>
-                    <div class="outcome">🚨 Full-time safety advocate</div>
-                    <div class="quote">
-                        "I left so that I could talk about the dangers of AI without considering 
-                        how this impacts Google."
-                        <div class="quote-attribution">— Geoffrey Hinton, via NYT interview</div>
-                    </div>
-                </div>
-                
-                <div class="departure-card severity-high">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Mira Murati</div>
-                            <div class="person-role">CTO</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>Sept 2023 (later Nov board crisis)</strong> — Part of tumultuous leadership period.
-                        Later left in Sept 2024 amid company restructuring.
-                    </p>
-                    <div class="outcome outcome-neutral">🔄 Leadership turbulence</div>
-                </div>
-            </div>
-            
-            <!-- 2021 -->
-            <div class="year-section">
-                <h2 class="year-header">2021</h2>
-                
-                <div class="departure-card severity-critical">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Dario & Daniela Amodei + Team</div>
-                            <div class="person-role">VP Research + Safety Lead + ~10 researchers</div>
-                        </div>
-                        <span class="company-tag company-openai">OpenAI</span>
-                    </div>
-                    <p class="departure-details">
-                        <strong>2021</strong> — Mass exodus to found Anthropic, explicitly over concerns about 
-                        OpenAI's safety practices and commercial direction.
-                    </p>
-                    <div class="outcome">🚨 Founded competitor on safety principles</div>
-                    <div class="quote">
-                        "We believe we need a new approach to AI safety."
-                        <div class="quote-attribution">— Anthropic founding mission</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Patterns Section -->
-            <div class="year-section">
-                <h2 class="year-header">🔮 The "Gone Quiet" List</h2>
-                
-                <div class="departure-card severity-critical">
-                    <div class="card-header">
-                        <div>
-                            <div class="person-name">Multiple Unnamed Researchers</div>
-                            <div class="person-role">Various senior roles</div>
-                        </div>
-                        <span class="company-tag" style="background: rgba(255,51,51,0.2); color: #ff6666;">VARIOUS</span>
-                    </div>
-                    <p class="departure-details">
-                        Researchers who have quietly left the industry, deleted social media, 
-                        or moved to remote locations. Some known to have relocated to monasteries, 
-                        farms, or remote communities. Names withheld at request.
-                    </p>
-                    <div class="outcome">🏔️ Left grid entirely</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="insights-section">
-            <h3 class="insights-title">📊 Pattern Analysis</h3>
+        <div class="insights">
+            <h2>Patterns</h2>
             <div class="insight-grid">
-                <div class="insight-card">
-                    <h4>Safety Teams Hit Hardest</h4>
-                    <p>Disproportionate number of departures come from safety/alignment teams. 
-                    OpenAI's Superalignment team effectively dissolved within months of formation.</p>
+                <div class="insight">
+                    <h3>Safety teams hit hardest</h3>
+                    <p>Disproportionate departures from safety and alignment teams. OpenAI's Superalignment team dissolved within months of formation.</p>
                 </div>
-                <div class="insight-card">
-                    <h4>Equity Forfeiture Pattern</h4>
-                    <p>Multiple researchers have forfeited significant equity (potentially $10M+) 
-                    rather than sign non-disparagement agreements. Money isn't keeping them quiet.</p>
+                <div class="insight">
+                    <h3>Equity forfeiture</h3>
+                    <p>Multiple researchers have forfeited significant equity rather than sign non-disparagement agreements. Money isn't keeping them quiet.</p>
                 </div>
-                <div class="insight-card">
-                    <h4>The Anthropic Pipeline</h4>
-                    <p>Anthropic has become the destination for safety-concerned researchers. 
-                    Founded by OpenAI safety team, continues to absorb departures.</p>
+                <div class="insight">
+                    <h3>The Anthropic pipeline</h3>
+                    <p>Anthropic has become the destination for safety-concerned researchers. Founded by OpenAI's safety team, continues to absorb departures.</p>
                 </div>
-                <div class="insight-card">
-                    <h4>Public Warnings Increasing</h4>
-                    <p>2024 saw more former insiders speaking publicly about concerns than 
-                    any previous year. NDAs and equity clawbacks aren't stopping them.</p>
-                </div>
-                <div class="insight-card">
-                    <h4>Seniority of Departures</h4>
-                    <p>Not just junior researchers — co-founders, chief scientists, and 
-                    longtime executives are leaving. These people built the companies.</p>
-                </div>
-                <div class="insight-card">
-                    <h4>Timeline Acceleration</h4>
-                    <p>Many departures cite compressed timelines and racing dynamics. 
-                    The closer they get to AGI, the more people leave.</p>
+                <div class="insight">
+                    <h3>Seniority of departures</h3>
+                    <p>Not junior researchers—co-founders, chief scientists, and longtime executives are leaving. These people built the companies.</p>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>
+            <p class="footer-note">
                 Data compiled from public sources, interviews, and news reports. 
                 Some information withheld to protect privacy of individuals who have left quietly.
             </p>
-            <p style="margin-top: 16px;">
-                <strong>The question isn't whether AI is dangerous. 
-                It's why the people building it keep walking away.</strong>
-            </p>
-            <p style="margin-top: 24px;">
-                Built by <a href="https://prospectorlabs.io">Prospector Labs</a> | 
-                <a href="https://github.com/OwenCoonahan">@OwenCoonahan</a>
+            <p class="footer-links">
+                <a href="https://prospectorlabs.io">Prospector Labs</a> · 
+                <a href="https://github.com/OwenCoonahan">GitHub</a>
             </p>
         </footer>
     </div>
